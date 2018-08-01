@@ -1,0 +1,1484 @@
+{
+	"info": {
+		"_postman_id": "5a6a3adc-392c-7f74-bf5b-4633fb56004b",
+		"name": "Daily Test (Dev)",
+		"description": "## what is Markdown?\r\nsee [Wikipedia](http://en.wikipedia.org/wiki/Markdown)\r\n\r\nMarkdown is a *lightweight markup language*, originally created by John Gruber and Aaron Swartz allowing people \"to write using an easy-to-read, easy-to-write plain text format, then convert it to structurally valid XHTML (or HTML)\".",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login driver copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "66320adc-15ea-4b4f-8538-bd34fbfd039b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Check user_id\", function () {",
+							"    ",
+							"    var jsonData = pm.response.json();",
+							"    ",
+							"    pm.expect(jsonData.data.user.profile.id).to.eql(\"399\");",
+							"});",
+							"",
+							"pm.environment.set(\"token\", jsonData.data.user.profile.token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account",
+							"value": "+84988264494",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/user/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				},
+				"description": "login app"
+			},
+			"response": []
+		},
+		{
+			"name": "login passenger copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"user_id_passenger\", jsonData.data.user.profile.id);\r",
+							"postman.setEnvironmentVariable(\"token_passenger\", jsonData.data.token);\r",
+							"\r",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "account",
+							"value": "+841646426828",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345678",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/user/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				},
+				"description": "login app"
+			},
+			"response": []
+		},
+		{
+			"name": "createTripDriver copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//create date today\r",
+							"var today = new Date();\r",
+							"var dd = today.getDate();\r",
+							"var mm = today.getMonth()+1; //January is 0!\r",
+							"var yyyy = today.getFullYear();\r",
+							"\r",
+							"if(dd<10) {\r",
+							"    dd = '0'+dd;\r",
+							"} \r",
+							"if(mm<10) {\r",
+							"    mm = '0'+mm;\r",
+							"} \r",
+							"var second = Math.floor(Math.random() * 59);\r",
+							"if (second < 10){\r",
+							"    second = '0'+second;\r",
+							"}\r",
+							"today = yyyy + '/' + mm + '/' + dd + ' 23:'+second;\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"date\", today);\r",
+							"\r",
+							"\r",
+							"//create source and destination from array\r",
+							"var myArray = [\r",
+							"  {\r",
+							"    \"source\" : \"Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Gifu Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Aichi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tokyo Disney Resort, Urayasu, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Beppu, Oita Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"D-like, Koshi, Kumamoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Alcatraz E.R., Dogenzaka, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hotel KSP, Kawasaki, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"adidas Originals Store Shinsaibashi, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"HUB Shinjuku south exit shop, Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"HUNDRED STAY Tokyo Shinjuku, Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Toki, Gifu, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"MNK, Wakabayashi Ward, Miyagi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ga Hiroshima, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yis, Kobe, Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Aso Farm Land, Minamiaso, Kumamoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Iori Machiya Stay, Shimogyo Ward, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uijin, Matsuyama, Ehime Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"qu'il fait bon, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Bizenosafunetoken Museum, 966 Osafunecho Osafune, Setouchi, Okayama Prefecture 701-4271, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yufuin Floral Village (Shukuhakushasenyo) Parking Lot, Yufu, Oita Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tonogaichi Park, Nhật Bản, 岡山県倉敷市藤戸町藤戸\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"都道18号線, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yasukuni Dori, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本, 神奈川県川崎市\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Minami-Shinjuku Station, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yurakucho, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kitahiroshimachochiyodaundo Park, 500 Mibu, Kitahiroshima, Yamagata District, Hiroshima Prefecture 731-1515, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Takeda Hospital, 352-1 Tsurajimacho Nishinoura, Kurashiki, Okayama Prefecture 712-8001, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"The National Art Center, Tokyo, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Quality Hostel K's House Takayama, Takayama, Gifu Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Japan, 〒861-1115 Kumamoto-ken, Kōshi-shi, Toyooka, 2000−1085, 48 （株）肥後ポートリー豊岡農場\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"A N H Service Saku Recycling Ltd., Saku, Nagano Prefecture, Japan\"\r",
+							"  },\r",
+							"\r",
+							"  {\r",
+							"    \"source\" : \"Hiroshima, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本東京都町田市鶴間３丁目３−２南町田駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Lounge QWAN, Nagoya, Aichi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"南町田駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Fuchū, Hiroshima, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Chūbu Centrair International Airport, Tokoname, Aichi Prefecture, Japan\"\r",
+							"  }\r",
+							"  ,\r",
+							"  {\r",
+							"    \"source\" : \"Taito, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Bunkyo, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県横浜市青葉区青葉台１丁目 青葉台駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県横浜市青葉区青葉台\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Nagoya, Aichi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"yy sweets cafe, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Weekenders Coffee 富小路, Nakagyo Ward, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Edo-Tokyo Museum, Sumida, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"AEONMALL OKINAWA RYCOM., Nakagami District, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本茨城県取手市宮和田藤代駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本千葉県印西市平賀 ＷＶＣ\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"RK GARDEN POINT MAKERS, Kitasaku District, Nagano Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uyama Animal Clinic, Kurate, Fukuoka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"KOBE-SANDA PREMIUM OUTLETS®, Kita Ward, Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"curio espresso and vintage design, Kanazawa, Ishikawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本千葉県浦安市北栄１丁目１２−３ BAR Soul House Qwest\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Pokemon Center Mega Tokyo, Toshima, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ueno, Taito, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Google Japan, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"YHA Kiyosato Ihatov Youth Hostel, Shari District, Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ueno Park bus parking, Taito, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"GS Park Sangecho Parking Lot, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yokota Air Base, Fussa, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Oasis 21, Nagoya, Aichi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本山梨県富士吉田市新西原５丁目６−１ 富士急ハイランド\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yokohamakoen, Naka Ward, Yokohama, Kanagawa Prefecture 231-0022, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本京都府京都市下京区大黒町（室町通） JHM京都リゾート室町五条\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本京都府亀岡市篠町王子市原３１ LKK\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"ななや 静岡店, Aoi Ward, Shizuoka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Gonpachi Nishi-Azabu, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"H&M, Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uijin, Matsuyama, Ehime, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"IKEA Kohoku store, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Izumisano, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tochigi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Daiso 100 yen, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Disney Store Shinsaibashi, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Iidabashi, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"PFN, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tokyo Disneyland, Urayasu, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Dogenzaka, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tokyo Disneyland, Urayasu, Chiba, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ibaraki Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tokyo Tsukiji Fish Market Blowfish wholesale cooperative, Chuo, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Quioto, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Wakayama Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Japan, 〒460-0032 Aichi-ken, Nagoya-shi, Naka-ku, Ninomaru, 1−１\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"A N H Service Saku Recycling Ltd., Saku, Nagano, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Fukuoka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"5 Chome-4-1 Shimoyamatedōri, Chūō-ku, Kōbe-shi, Hyōgo-ken 650-0011, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Gokokuji Station, 5 Chome-４０-８ Otsuka, Bunkyo, Tokyo 112-0012, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \" Seijo High School, ７-３０ Tomihisacho, Shinjuku, Tokyo 162-0067, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Imado Shrine, 5, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Asakusa Station, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Asakusa Station, Taito, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ghibli Museum, Mitaka, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"APA Hotel Sapporo-Susukino-Ekimae, Sapporo, Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uingutsuchiya, Narita, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"udo tokyo, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uji Cha-gan-ju-tei House, Uji, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"DTS別館, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"WE ARE THE FARM, Shibuya, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Zoetrope, Nishishinjuku, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"YCAT Shop, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Edogawa, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Dynamic Audio, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Sapporo, Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"GVA Law Offices, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Souemoncho, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ashikaga Flower Park Bus Parking Lot, Ashikaga, Tochigi, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Dotonbori, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"P.S.FA shinsaibashi, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  \r",
+							"  {\r",
+							"    \"source\" : \"Fjallraven, Nagoya, Aichi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Qwalunca Cafe, Musashino, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Asakusa, Taito, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Typhoon Motors, Nakagami District, Okinawa, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ubara Beach Resort, Katsuura, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"sketch, Kyoto, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"FP HOTELS Shin-Imamiya, Nishinari Ward, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"This is 麺, Ginowan, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Slobe iena, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"MnK Country Resort Reception, Abuta District, Hokkaidō, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Almont Hotel Naha-Kenchomae, Naha, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Nara Station, Nara, Nara Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tetsugaku-no-michi, Sakyo Ward, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Q plaza Futakotamagawa, Setagaya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"PDC, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yudanaka Onsen, Yamanouchi, Nagano Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本埼玉県越谷市レイクタウン１−１ Z-CRAFT\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Lake Kawaguchi, Minamitsuru District, Yamanashi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"JFE Gymnastics, Chiba, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yin-yang Flower Cafe, Ukyo Ward, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Himeji Castle, Himeji, Hyōgo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yuigahama, Kamakura, Kanagawa, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"quán ăn việt nam, Kawasaki, Kanagawa, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Pokemon Store, Marunouchi, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kyoto, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ghibil Studios Shop Kyoto, Kyoto, Kyoto Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uuchimoto Parking Lot, Miki, Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Queen's Square, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Qwalunca Cafe, Musashino, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Chuo, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hdfv, Nakano, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Saitama Super Arena, Saitama, Saitama Prefecture, Japan\"\r",
+							"  },\r",
+							"  \r",
+							"  {\r",
+							"    \"source\" : \"Burger King, Nakagyo Ward, Kyōto, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"adidas Originals Store Shinsaibashi, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ueno Park bus parking, Taitō, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"QQ Kaigo Taxis, Sapporo, Hokkaidō, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Universal Studios Japan, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"\r",
+							"  {\r",
+							"    \"source\" : \"UMEDA OPA, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kanda Station, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"LK Hair Studio, Komaki, Aichi, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Saitama Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"QWR, Mitsuke, Niigata Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"ZX WEST CHIBA, Chiba, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"BNI, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kobe, Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"KJ Car Rental, Shimoina District, Nagano Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Uyama Animal Clinic, Kurate, Fukuoka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hju, Hiroshima, Hiroshima Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"MnK Country Resort Reception, Abuta District, Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"rt Fukuoka shop, Chuo Ward, Fukuoka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"tutu anna, Nakagyo Ward, Kyōto, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yin-yang Flower Cafe, Ukyo Ward, Kyōto, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Koto, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"YtoA Hair Salon, Fujimino, Saitama, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Omotesando Hills, Shibuya, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Almont Hotel Naha-Kenchomae, Naha, Okinawa, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Don Quijote Dotonbori Store, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kuromon Ichiba Market, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Konoha Mall, Fukuoka, Fukuoka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Akasaka, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Tsukiji Market, Chuo, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"HG Studio Apartment, Yodogawa Ward, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"OKINAWA OUTLET MALL ASHIBINAA, Tomigusuku, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Luke’s Lobster, Shibuya, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Fuji-Q Highland, Fujiyoshida, Yamanashi, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Capcom, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hjogo prefektūra, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"The Ritz-Carlton-Tokyo, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yufu, Oita Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"QVC, Mihama Ward, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"The National Art Center, Tokyo, Minato, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"rt, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"TT&CO. JAPAN, Edogawa, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Iogi Station, Suginami, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Roppongi, Minato, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Lhasa, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"SDP, Sakai, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Luke’s Lobster, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hokkaido, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"ABC Isumi Golf Course, Isumi, Chiba, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Vessel hotel Campana Okinawa, Nakagami District, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"E-Hotel Higashi Shinjuku, Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Qatar Airways, Chiyoda, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"HDC Atlas Clinic, Chiyoda, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Ots Rent A Car, Tomigusuku, Okinawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"AFURI Nakameguro, Meguro, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県小田原市栄町１丁目２ Fhp 7 Dining Nana（ナナ） 小田原\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hill + Knowlton Strategies Japan, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"GHOST ultra lounge, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"吉祥寺\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県横浜市青葉区桜台 青葉台小学校\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Hiroshima Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Iuj, Minamiuonuma, Niigata Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yokota Air Base, Fussa, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Abuta District, Hokkaido Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Jingumae, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Zushi, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"XEX Daikanyama / aburiyaki & sushi An, Shibuya, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"The Fhont Shop, Meguro, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Yokohama International School, Yokohama, Kanagawa Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"yy sweets cafe, Yokohama, Kanagawa, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"T.Y. HARBOR, Shinagawa, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"ABC Isumi Golf Course, Isumi, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"BnA Hotel - Koenji, Koenjikita, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"FGPROJAPAN, Shiraoka, Saitama Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Shinjuku Prince Hotel, Shinjuku, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Grand Prince Hotel New Takanawa, Takanawa, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"HGT, Haga, Tochigi Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"BIC CAMERA Namba Outlet Store SAURUS2, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Kuromon Ichiba Market, Ōsaka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"DiverCity Tokyo Plaza, Kōtō, Tokyo, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"vvivazone, Fukuoka, Nhật Bản\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本福島県いわき市\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"やま中, Chuo Ward, Fukuoka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本埼玉県ふじみ野市\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"LUKE'S LOBSTER, Osaka, Osaka Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Himeji Castle, Himeji, Hyogo Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県相模原市南区相模大野\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本神奈川県横浜市青葉区榎が丘７−２２ アップガレージ本店\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本愛知県あま市\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本東京都\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"原宿駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Gundam Front Tokyo, Aomi, Tokyo, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"Makuhari Messe, Mihama Ward, Chiba Prefecture, Japan\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本京都府八幡市八幡水珀 アップガレージ京都八幡店\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"田奈駅\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本京都府京都市中京区菱屋町 タイムズ三条東洞院第２駐車場\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本京都府京都市南区 （株）ソフマップ イオンモールＫＹＯＴＯ店\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本東京都渋谷区神南１丁目１５−８ コアパンケーキハウス 渋谷\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本愛知県碧南市江口町１５−３ あおいパーク\"\r",
+							"  },\r",
+							"  {\r",
+							"    \"source\" : \"日本東京都武蔵野市吉祥寺本町１丁目５−１ 吉祥寺パルコ\"\r",
+							"  }\r",
+							"  \r",
+							"]\r",
+							"var source = myArray[Math.floor(Math.random() * myArray.length)]['source'];\r",
+							"var destination = myArray[Math.floor(Math.random() * myArray.length)]['source'];\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"source\", source);\r",
+							"postman.setEnvironmentVariable(\"destination\", destination);\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"driver_trip_id\", jsonData.data.id);\r",
+							"\r",
+							"postman.setEnvironmentVariable(\"source\", jsonData.data.source);\r",
+							"postman.setEnvironmentVariable(\"destination\", jsonData.data.destination);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "source",
+							"value": "{{source}}",
+							"type": "text"
+						},
+						{
+							"key": "destination",
+							"value": "{{destination}}",
+							"type": "text"
+						},
+						{
+							"key": "departure_datetime",
+							"value": "{{date}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_type",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "max_passenger_num",
+							"value": "5",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/createTrip",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"createTrip"
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "c983ad10-d5c7-4fca-ac3b-5a212db5e279",
+					"name": "example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "_user_id",
+									"value": "{{user_id_driver}}",
+									"type": "text"
+								},
+								{
+									"key": "_token",
+									"value": "{{token_driver}}",
+									"type": "text"
+								},
+								{
+									"key": "source",
+									"value": "{{source}}",
+									"type": "text"
+								},
+								{
+									"key": "destination",
+									"value": "{{destination}}",
+									"type": "text"
+								},
+								{
+									"key": "departure_datetime",
+									"value": "{{date}}",
+									"type": "text"
+								},
+								{
+									"key": "trip_type",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "max_passenger_num",
+									"value": "5",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/api/trip/createTrip",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"trip",
+								"createTrip"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"name": "connection",
+							"key": "connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "content-length",
+							"key": "content-length",
+							"value": "565",
+							"description": ""
+						},
+						{
+							"name": "content-type",
+							"key": "content-type",
+							"value": "application/json",
+							"description": ""
+						},
+						{
+							"name": "date",
+							"key": "date",
+							"value": "Tue, 29 Aug 2017 02:10:01 GMT",
+							"description": ""
+						},
+						{
+							"name": "keep-alive",
+							"key": "keep-alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "server",
+							"key": "server",
+							"value": "Apache/2.4.27 (Amazon) PHP/5.6.30",
+							"description": ""
+						},
+						{
+							"name": "x-powered-by",
+							"key": "x-powered-by",
+							"value": "PHP/5.6.30",
+							"description": ""
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 0,\n    \"error_msg\": \"\",\n    \"data\": {\n        \"id\": \"6703\",\n        \"user_id\": \"395\",\n        \"coupon_id\": null,\n        \"departure_datetime\": \"2017-08-29 23:56:00\",\n        \"current_passenger_num\": \"0\",\n        \"max_passenger_num\": \"5\",\n        \"source\": \"APA Hotel Sapporo-Susukino-Ekimae, Sapporo, Hokkaido Prefecture, Japan\",\n        \"destination\": \"yy sweets cafe, Yokohama, Kanagawa Prefecture, Japan\",\n        \"source_coordinate\": \"43.0556696,141.3565629\",\n        \"destination_coordinate\": \"35.5265062,139.6687428\",\n        \"trip_type\": \"2\",\n        \"price\": \"2000\",\n        \"discount_price\": null,\n        \"state\": \"0\",\n        \"trip_status\": \"0\",\n        \"expected_datetime\": null,\n        \"comment\": \"\",\n        \"view_number\": \"0\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "createTripPassenger copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"passenger_trip_id\", jsonData.data.id);\r",
+							"\r",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_passenger}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_passenger}}",
+							"type": "text"
+						},
+						{
+							"key": "source",
+							"value": "{{source}}",
+							"type": "text"
+						},
+						{
+							"key": "destination",
+							"value": "{{destination}}",
+							"type": "text"
+						},
+						{
+							"key": "departure_datetime",
+							"value": "{{date}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_type",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "max_passenger_num",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/createTrip",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"createTrip"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "driver_approve_passenger copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "driver_trip_id",
+							"value": "{{driver_trip_id}}",
+							"type": "text"
+						},
+						{
+							"key": "passenger_trip_id",
+							"value": "{{passenger_trip_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}//api/trip/driver_approve_passenger",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"",
+						"api",
+						"trip",
+						"driver_approve_passenger"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_on_processing_user_trips copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var jsonDatas = jsonData.data;",
+							"",
+							"//var ids = \"0\";",
+							"",
+							"for(var i=0; i < jsonDatas.length; i++ ){",
+							"    if(jsonDatas[i].trip_status === \"0\" || jsonDatas[i].trip_status === \"2\")",
+							"   tests[\"#3,4: \" + jsonDatas[i].id +\"------------ trip status: \"+ jsonDatas[i].trip_status] = true;",
+							"}",
+							"",
+							"",
+							"",
+							"",
+							"postman.setEnvironmentVariable(\"trip_matched\", jsonDatas[0].id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_type",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/get_on_processing_user_trips",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"get_on_processing_user_trips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_on_processing_user_pass copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"trip_past\", jsonData.data[0].id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_type",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/get_on_processing_pass",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"get_on_processing_pass"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_matched_routes_of_trip copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_id",
+							"value": "{{trip_matched}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/get_matched_routes_of_trip",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"get_matched_routes_of_trip"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_departure_by_trip_id copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "trip_type",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "trip_id",
+							"value": "{{trip_past}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/trip/get_departure_by_trip_id",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"trip",
+						"get_departure_by_trip_id"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_conversations copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/api/chat/get_conversations",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"chat",
+						"get_conversations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "_user_id",
+							"value": "{{user_id_driver}}",
+							"type": "text"
+						},
+						{
+							"key": "_token",
+							"value": "{{token_driver}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://api.norina.jp/api/user/logout",
+					"protocol": "http",
+					"host": [
+						"api",
+						"norina",
+						"jp"
+					],
+					"path": [
+						"api",
+						"user",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
